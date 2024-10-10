@@ -1,0 +1,2 @@
+minute,hour,day,month,dayofweek,command
+*/30,*,*,*,*,"poetry run python monitor.py cpu"

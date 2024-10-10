@@ -1,3 +1,6 @@
+cpu_usage.csv
+gpu_usage.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
