@@ -9,6 +9,10 @@ readme = "README.md"
 python = "^3.12"
 psutil = "^6.0.0"
 pandas = "^2.2.3"
+slack-sdk = "^3.33.1"
+requests = "^2.32.3"
+python-dotenv = "^1.0.1"
+seaborn = "^0.13.2"
 
 
 [build-system]

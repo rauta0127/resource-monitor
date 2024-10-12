@@ -1,34 +1,50 @@
 import os
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from dotenv import load_dotenv
 
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
+# https://tools.slack.dev/python-slack-sdk/web/
 
-client = WebClient(token="XXX")
+class SlackNotificator():
+    def __init__(self):
+        load_dotenv()
+        self.SLACK_BOT_TOKEN = os.getenv('SLACK_BOT_TOKEN')
+        self.SLACK_CHANNEL_ID = os.getenv('SLACK_CHANNEL_ID')
+        self.CLIENT = WebClient(token=self.SLACK_BOT_TOKEN)
+        # https://api.slack.com/methods/auth.test
+        self.AUTH_RESPONSE = self._test_authorize()  
 
-# トークンが正しいか確認します
-auth_test = client.auth_test()
-bot_user_id = auth_test["user_id"]
-print(f"App's bot user: {bot_user_id}")
+    def _test_authorize(self):
+        auth_test = self.CLIENT.auth_test()
+        assert auth_test["ok"] is True
 
-try:
-    filepath="./cat.jpg"
-    response = client.files_upload_v2(channel_id='XXX', file=filepath, request_file_info=False)
-    assert response["file"]  # the uploaded file
-except SlackApiError as e:
-    # You will get a SlackApiError if "ok" is False
-    assert e.response["ok"] is False
-    assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
-    print(f"Got an error: {e.response['error']}")
-    print(f"{e}")
+    def get_bot_user_id(self):
+        return self.AUTH_RESPONSE["user_id"]
+    
+    def post_message(self, message: str):
+        try:
+            response = self.CLIENT.chat_postMessage(
+                channel=self.SLACK_CHANNEL_ID,
+                text=message
+            )
+            return response
+        except SlackApiError as e:
+            # You will get a SlackApiError if "ok" is False
+            assert e.response["error"]    # str like 'invalid_auth', 'channel_not_found'
 
-# import requests
+    def post_message_with_files(self, message: str, filepath: str):
+        try:
+            response = self.CLIENT.files_upload_v2(
+                channel=self.SLACK_CHANNEL_ID,
+                file=filepath,
+                initial_comment=message,
+            )
+            return response
+        except SlackApiError as e:
+            assert e.response["error"]
 
-# # ここでエラー（xxxx.comは仮）
-# html = requests.get("https://www.google.co.jp/")
-
-# print(html)
-
-# import certifi
-# print(certifi.where())
+if __name__ == "__main__": 
+    notificator = SlackNotificator()
+    message = "test message"
+    filepath = "cat.jpg"
+    notificator.post_message_with_files(message, filepath)
