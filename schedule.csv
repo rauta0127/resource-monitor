@@ -1,2 +1,4 @@
 minute,hour,day,month,dayofweek,command
-*/30,*,*,*,*,"poetry run python monitor.py cpu"
+*/30,*,*,*,*,"cd /home/mais/turata/resource-monitor && /home/mais/.local/bin/poetry run python monitor.py cpu"
+*/30,*,*,*,*,"cd /home/mais/turata/resource-monitor && /home/mais/.local/bin/poetry run python monitor.py gpu"
+0,"0,8,16",*,*,*,"cd /home/mais/turata/resource-monitor && /home/mais/.local/bin/poetry run python report.py"

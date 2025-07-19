@@ -161,8 +161,9 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     # Ensure the csv_path has the correct extension
-    if not args.csv_path.endswith(".csv"):
-        raise ValueError("The CSV path must end with '.csv'.")
+    if args.csv_path:
+        if not args.csv_path.endswith(".csv"):
+            raise ValueError("The CSV path must end with '.csv'.")
     
     csv_path = args.csv_path if args.csv_path else "cpu_usage.csv" if args.monitor_type == "cpu" else "gpu_usage.csv"
     

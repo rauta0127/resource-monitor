@@ -1,6 +1,8 @@
 img/
 cpu_usage.csv
 gpu_usage.csv
+cpu_usage_bk.csv
+gpu_usage_bk.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
